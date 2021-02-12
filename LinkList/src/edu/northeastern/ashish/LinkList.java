@@ -342,10 +342,44 @@ public class LinkList <T> {
         }
     }
 
-    //https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
-    public void removeDuplicatesTwo(){
+//    //https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
+//    public void removeDuplicatesTwo(){
+//        if(head == null | head.next == null){
+//            return;
+//        }
+//        boolean isDuplicate = false;
+//        Node<T> temp = head;
+//        while(temp.next != null && temp.next.data == temp.data){
+//            temp = temp.next;
+//            isDuplicate = true;
+//        }
+//
+//        if( isDuplicate == true && temp.next == null){
+//            head = null;
+//            return;
+//        }
+//        if( isDuplicate == true){
+//            head = temp.next;
+//        }
+//
+//        temp = head;
+//        isDuplicate = false;
+//
+//        while(temp.next != null){
+//            if(temp.data == temp.next.data){
+//                temp.next = temp.next.next;
+//                isDuplicate = true;
+//            }else{
+//                isDuplicate = false;
+//                temp = temp.next;
+//            }
+//        }
+//
+//
+//    }
 
-    }
+
+
 
 }
 

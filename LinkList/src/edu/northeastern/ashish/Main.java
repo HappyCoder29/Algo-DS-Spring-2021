@@ -7,19 +7,81 @@ public class Main {
     public static void main(String[] args) {
 
         LinkList<Integer> list = getLinkList();
-        list.removeDuplicates();
-        list.printList();
-        System.out.println("");
+
+
+
+        System.out.println(convertBinaryToInteger(list.head));
 
     }
 
     private static LinkList<Integer> getLinkList(){
         LinkList<Integer> list = new LinkList<>();
         list.addTail(1);
+        list.addTail(0);
         list.addTail(1);
         list.addTail(1);
-        list.addTail(1);
+
         return list;
+    }
+
+
+    public static NodeRand<Integer> getRandomList(){
+        NodeRand<Integer> one = new NodeRand<>(1);
+        NodeRand<Integer> two = new NodeRand<>(2);
+        NodeRand<Integer> three = new NodeRand<>(3);
+        NodeRand<Integer> four = new NodeRand<>(4);
+
+        one.next = two;
+        two.next = three;
+        three.next = four;
+
+        one.rand = three;
+        two.rand = two;
+        three.rand = four;
+        four.rand = two;
+
+        return one;
+
+    }
+
+
+    public static NodeRand<Integer> createCopyOfRandomList(NodeRand<Integer> orig){
+        NodeRand<Integer> tempOrig = orig;
+        // Create Copy inside the Original One
+        while(tempOrig != null){
+            NodeRand<Integer> add = new NodeRand<>(tempOrig.data);
+            add.next = tempOrig.next;
+            tempOrig.next = add;
+            tempOrig = tempOrig.next.next;
+        }
+        tempOrig = orig;
+        NodeRand<Integer> tempDuplicate = orig.next;
+
+        // we figure out what is the random pointer
+        while(tempOrig != null){
+            tempDuplicate.rand = tempOrig.rand.next;
+            tempOrig = tempOrig.next.next;
+            if(tempOrig != null){
+                tempDuplicate = tempOrig.next;
+            }
+        }
+
+        NodeRand<Integer> duplicate = orig.next;
+        tempOrig = orig;
+        tempDuplicate = duplicate;
+
+        // this should break out the orig and duplicate
+        while(tempOrig != null && tempOrig.next != null){
+            tempOrig.next = tempOrig.next.next;
+            if(tempOrig.next != null){
+                tempDuplicate.next = tempDuplicate.next.next;
+            }
+            tempOrig = tempOrig.next;
+            tempDuplicate = tempDuplicate.next;
+        }
+
+        return  duplicate;
+
     }
 
 
@@ -187,6 +249,142 @@ public class Main {
 
 
 
+    }
+
+    // https://leetcode.com/problems/partition-list/
+
+    public static Node<Integer> partitionAroundX(Node<Integer> node, Integer x){
+        if(node == null || node.next == null){
+            return node;
+        }
+
+        Node<Integer> smaller = null;
+        Node<Integer> larger = null;
+
+        Node<Integer> temp = node;
+
+        while(temp != null){
+            if(temp.data < x){
+                Node<Integer> add = temp;
+                temp = temp.next;
+                add.next = smaller;
+                smaller = add;
+            }else{
+                Node<Integer> add = temp;
+                temp = temp.next;
+                add.next = larger;
+                larger = add;
+            }
+        }
+
+        smaller = reverse(smaller);
+        larger = reverse(larger);
+
+        node = smaller;
+        while(smaller.next != null){
+            smaller = smaller.next;
+        }
+        smaller.next = larger;
+
+        return node;
+
+
+
+    }
+
+    public static Node<Integer> breakListInHalf(Node<Integer> node){
+        if(node == null || node.next == null){
+            return node;
+        }
+
+        Node front = node;
+        Node back = node;
+
+        while(front.next != null){
+            front = front.next;
+            if(front.next != null) {
+                front = front.next;
+                back = back.next;
+            }
+        }
+        Node temp = back.next;
+        back.next = null;
+
+        return temp;
+
+    }
+
+
+    public static Node<Integer> sortList(Node<Integer> node){
+
+
+        if (node == null || node.next == null)
+            return node;
+        Node mid = breakListInHalf(node);
+        Node left = sortList(node);
+        Node right = sortList(mid);
+        return  sortedMerge(left , right);
+
+    }
+
+
+    public static int convertBinaryToInteger(Node<Integer> node){
+        if(node == null )
+            return 0;
+        node = reverse(node);
+
+        Node<Integer> temp = node;
+        int sum = 0;
+        int current = 0;
+        while(temp != null){
+            sum += temp.data * Math.pow(2, current);
+            current ++;
+            temp = temp.next;
+        }
+        return  sum;
+    }
+
+    public static int size(Node<Integer> node){
+        int size = 0;
+        Node<Integer>  temp = node;
+        while(temp != null){
+            temp = temp.next;
+            size++;
+        }
+        return size;
+    }
+
+    //https://leetcode.com/problems/intersection-of-two-linked-lists/
+    public static Node<Integer> getIntersection(Node<Integer> node1, Node<Integer> node2){
+        if(node1 == null || node2 == null){
+            return null;
+        }
+
+        int size1 = size(node1);
+        int size2 = size(node2);
+
+        Node<Integer> temp1 = node1;
+        Node<Integer> temp2 = node2;
+
+        if(size1 > size2 ){
+            for(int i = 0 ; i < size1-size2; i ++){
+                temp1 = temp1.next;
+            }
+        }else{
+            for(int i = 0 ; i < size2-size1; i ++){
+                temp2 = temp2.next;
+            }
+        }
+
+        while(temp1 != null){
+            if(temp1 == temp2){
+                return temp1;
+            }
+            temp1 = temp1.next;
+            temp2 = temp2.next;
+        }
+
+        return null;
     }
 
 
