@@ -1,9 +1,43 @@
 package edu.northeastern.ashish;
 
+import javax.print.event.PrintEvent;
+
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
+
+        LinkList<Integer> list = getLinkList();
+        list.removeDuplicates();
+        list.printList();
+        System.out.println("");
+
+    }
+
+    private static LinkList<Integer> getLinkList(){
+        LinkList<Integer> list = new LinkList<>();
+        list.addTail(1);
+        list.addTail(1);
+        list.addTail(1);
+        list.addTail(1);
+        return list;
+    }
+
+
+    private static Node<Integer> getNode1(){
+        LinkList<Integer> list = new LinkList<>();
+        list.addTail(3);
+        list.addTail(5);
+        list.addTail(7);
+        list.addTail(2);
+        return list.head;
+    }
+
+    private static Node<Integer> getNode2(){
+        LinkList<Integer> list = new LinkList<>();
+        list.addTail(4);
+        list.addTail(8);
+        list.addTail(7);
+        return list.head;
     }
 
     private static void createCycle(LinkList<Integer> list){
@@ -27,6 +61,16 @@ public class Main {
         tailNode.next = startPoint;
     }
 
+
+    public static void printNode(Node<Integer> node){
+        while(node != null){
+            System.out.println(node.data + "-> ");
+            node = node.next;
+        }
+        System.out.println();
+
+    }
+
     public static Node<Integer> sortedMerge(Node<Integer> node1, Node<Integer> node2){
         Node result = null;
 
@@ -47,25 +91,6 @@ public class Main {
 
         return result;
 
-    }
-
-    public static Node<Integer> reverse(Node<Integer> node){
-        if(node == null || node.next == null){
-            return null;
-        }
-        Node<Integer> back = null;
-        Node<Integer> mid = node;
-        Node<Integer> front = node.next;
-
-        while(front != null){
-            mid.next = back;
-            back = mid;
-            mid = front;
-            front = front.next;
-        }
-        mid.next = back;
-        node = mid;
-        return  node;
     }
 
 
@@ -97,4 +122,74 @@ public class Main {
         return result;
 
     }
+
+    public static Node<Integer> reverse(Node<Integer> node){
+        if(node == null || node.next == null){
+            return null;
+        }
+        Node<Integer> back = null;
+        Node<Integer> mid = node;
+        Node<Integer> front = node.next;
+
+        while(front != null){
+            mid.next = back;
+            back = mid;
+            mid = front;
+            front = front.next;
+        }
+        mid.next = back;
+        node = mid;
+        return  node;
+    }
+
+    //https://leetcode.com/problems/add-two-numbers/
+    public static Node<Integer> addTwoNumbers(Node<Integer> node1, Node<Integer> node2){
+        // we are assuming there is data in both the nodes
+        node1 = reverse(node1);
+        node2 = reverse(node2);
+
+        int carry = 0 ;
+
+        Node<Integer> temp1 = node1;
+        Node<Integer> temp2 = node2;
+        Node<Integer> result = null;
+
+        while(temp1 != null || temp2 != null){
+            int sum = carry;
+            if(temp1 != null){
+                sum += temp1.data;
+            }
+            if(temp2 != null){
+                sum += temp2.data;
+            }
+
+            if(sum >= 10){
+                carry = 1;
+                sum = sum %10;
+            }else{
+                carry = 0;
+            }
+
+            if(temp1 != null){
+                temp1 = temp1.next;
+            }
+            if(temp2 != null){
+                temp2 = temp2.next;
+            }
+
+            Node<Integer> node = new Node<>(sum);
+            node.next = result;
+            result = node;
+
+        }
+
+        return result;
+
+
+
+    }
+
+
+
+
 }

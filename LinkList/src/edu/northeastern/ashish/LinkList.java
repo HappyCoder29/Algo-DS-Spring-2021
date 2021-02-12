@@ -1,5 +1,7 @@
 package edu.northeastern.ashish;
 
+import java.util.ArrayList;
+
 public class LinkList <T> {
     public Node<T> head;
     public LinkList(){
@@ -214,6 +216,8 @@ public class LinkList <T> {
 
     }
 
+
+
     public boolean isPalindrome(){
         if(head == null || head.next == null){
             return true;
@@ -243,5 +247,105 @@ public class LinkList <T> {
         temp.next = secondHalf;
         return  bPalindrome;
     }
+
+    //https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+    public void removeNthFromEnd(int n){
+        if(n <=0 || head == null){
+            return;
+        }
+
+        int count = size();
+        if(count == n){
+            head = head.next;
+            return;
+        }
+
+        Node<T> node = findKthFromEnd(n +1);
+        if(node == null){
+            return;
+        }
+
+        Node<T> deletedNode = node.next;
+
+        node.next = node.next.next;
+
+        deletedNode = null;
+    }
+
+    // https://leetcode.com/problems/reverse-nodes-in-k-group/
+    public void reverseNodesInKGroup(int k){
+        if(k <= 1 || head == null || head.next == null){
+            return;
+        }
+
+
+    }
+
+//    //https://leetcode.com/problems/split-linked-list-in-parts/
+//    public ArrayList<Node<T>> splitListInParts(int k){
+//        ArrayList<Node<T>> listNodes = new ArrayList<>();
+//        if(k <= 0 || head == null || head.next == null){
+//            listNodes.add(head);
+//            return  listNodes;
+//        }
+//
+//        Node<T> temp = head;
+//        Node<T> tempHead = head;
+//        while(temp != null){
+//
+//        }
+//
+//
+//    }
+
+    // https://leetcode.com/problems/rotate-list/
+    public void rotateList(int k){
+        k = k % size();
+        if(k <= 0  || head == null || head.next == null){
+            return;
+        }
+
+        Node<T> secondHalf = findKthFromEnd(k +1);
+        Node<T> firstHalf = secondHalf.next;
+
+        secondHalf.next = null;
+
+        Node<T> temp = firstHalf;
+        while(temp.next != null){
+            temp = temp.next;
+        }
+
+        temp.next = head;
+        head = firstHalf;
+    }
+
+
+    //https://leetcode.com/problems/remove-duplicates-from-sorted-list/
+
+    public void removeDuplicates(){
+        if(head == null || head.next == null){
+            return;
+        }
+
+        Node<T> temp = head;
+
+        while(temp.next != null){
+
+            while(temp.next != null && temp.next.data == temp.data){
+                temp.next = temp.next.next;
+            }
+
+            temp = temp.next;
+            if(temp == null){
+                break;
+            }
+        }
+    }
+
+    //https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
+    public void removeDuplicatesTwo(){
+
+    }
+
 }
 
