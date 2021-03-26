@@ -1,5 +1,6 @@
 package edu.northeastern.ashish;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -7,7 +8,19 @@ public class BST {
     Node root;
 
     public BST(){
-        //createTree();
+        createBinaryTree();
+    }
+
+    private void createBinaryTree(){
+        root = new Node(1);
+
+        root.left = new Node(2);
+        root.right = new Node(3);
+
+        root.left.left = new Node(4);
+        root.left.right = new Node(5);
+        root.right.left = new Node(6);
+        root.right.right = new Node(7);
     }
 
     private void createTree(){
@@ -150,6 +163,49 @@ public class BST {
             count.value ++;
             System.out.println("Count =" + count.value);
             inOrderExample(node.right, count );
+        }
+    }
+
+    public Integer[] storeValuesInArr(){
+        int size = size();
+        Integer[] arr = new Integer[size];
+        BoxInt ptr = new BoxInt();
+        storeValuesInArr(root, arr, ptr);
+
+        return  arr;
+    }
+
+    private void storeValuesInArr(Node node, Integer[] arr, BoxInt ptr){
+        if(node != null){
+            storeValuesInArr(node.left, arr, ptr);
+
+            arr[ptr.value] = node.data;
+            ptr.value ++;
+            storeValuesInArr(node.right, arr, ptr);
+        }
+    }
+
+
+    public void convertBinaryTreeToBST(){
+        if( root == null){
+            return;
+        }
+        int size = size();
+        Integer[] arr = storeValuesInArr();
+
+        Arrays.sort(arr);
+        BoxInt ptr = new BoxInt();
+        arrToBST(root, arr, ptr);
+
+    }
+
+    private void arrToBST(Node node, Integer[] arr, BoxInt ptr){
+
+        if(node != null){
+            arrToBST(node.left, arr, ptr);
+            node.data = arr[ptr.value];
+            ptr.value ++;
+            arrToBST(node.right, arr, ptr);
         }
     }
 
