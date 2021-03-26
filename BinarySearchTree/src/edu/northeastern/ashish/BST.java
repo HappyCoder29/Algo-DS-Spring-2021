@@ -8,7 +8,7 @@ public class BST {
     Node root;
 
     public BST(){
-        createBinaryTree();
+        //createBinaryTree();
     }
 
     private void createBinaryTree(){
@@ -208,6 +208,59 @@ public class BST {
             arrToBST(node.right, arr, ptr);
         }
     }
+
+
+    public void findKthSmallest(int k){
+        if(root == null || k < 1){
+            return;
+        }
+
+        BoxInt ptr = new BoxInt();
+        findKthSmallest(root, k , ptr);
+
+    }
+
+    private void findKthSmallest(Node node, int k , BoxInt ptr){
+        if(node != null){
+            findKthSmallest(node.left, k, ptr);
+
+            ptr.value ++;
+            if(ptr.value == k){
+                System.out.println("Kth smallest Value = " + node.data);
+                return;
+            }
+
+
+            findKthSmallest(node.right, k, ptr);
+        }
+    }
+
+
+    public void findKthLargest(int k){
+        if(root == null || k < 1){
+            return;
+        }
+
+        BoxInt ptr = new BoxInt();
+        findKthLargest(root, k , ptr);
+
+    }
+
+    private void findKthLargest(Node node, int k , BoxInt ptr){
+        if(node != null){
+            findKthLargest(node.right, k, ptr);
+
+            ptr.value ++;
+            if(ptr.value == k){
+                System.out.println("Kth smallest Value = " + node.data);
+                return;
+            }
+
+
+            findKthLargest(node.left, k, ptr);
+        }
+    }
+
 
 
 }
