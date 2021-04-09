@@ -1,9 +1,6 @@
 package edu.northeastern.ashish;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Locale;
-import java.util.Queue;
+import java.util.*;
 
 public class Graph {
     public HashMap<String, Node> nodes;
@@ -64,6 +61,7 @@ public class Graph {
         if( !nodes.containsKey(startNode)){
             return;
         }
+        resetVisited();
         Queue<Node> queue = new LinkedList<>();
         queue.add(nodes.get(startNode));
         queue.add(null);
@@ -77,10 +75,9 @@ public class Graph {
                 }
                 System.out.print(node.name + " ");
                 node.visited = true;
-                LinkedList<String> neighbours = node.getNeighbours();
-                for (String nodeStr : neighbours) {
-                    if( nodes.get(nodeStr).visited == false){
-                        queue.add(nodes.get(nodeStr));
+                for (Edge edge : node.listEdges) {
+                    if( nodes.get(edge.endNode).visited == false){
+                        queue.add(nodes.get(edge.endNode));
                     }
                 }
             }else{
@@ -95,6 +92,116 @@ public class Graph {
 
     }
 
+    public void depthFirstSearch(String startNode){
+        startNode = startNode.toUpperCase();
+        if( !nodes.containsKey(startNode)){
+            return;
+        }
+
+        resetVisited();
+
+        Stack<Node> stack = new Stack<>();
+        stack.push(nodes.get(startNode));
+
+        while(stack.size() != 0 ){
+            Node node = stack.pop();
+            if(node.visited == true){
+                continue;
+            }
+            System.out.print(node.name + " ");
+            node.visited = true;
+            for (Edge edge : node.listEdges) {
+                if( nodes.get(edge.endNode).visited == false){
+                    stack.push(nodes.get(edge.endNode));
+                }
+            }
+        }
+    }// end of depthFirstSearch
+
+
+    public boolean isReachable(String startNode, String endNode){
+        startNode = startNode.toUpperCase();
+        endNode = endNode.toUpperCase();
+        if( ! nodes.containsKey(startNode) || !nodes.containsKey(endNode)){
+            return false;
+        }
+
+        resetVisited();
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(nodes.get(startNode));
+        queue.add(null);
+
+        while(queue.size() != 0 ){
+            Node node = queue.remove();
+            if(node != null ){
+                if(node.visited == true){
+                    continue;
+                }
+                System.out.print(node.name + " ");
+                node.visited = true;
+
+                for (Edge edge : node.listEdges) {
+                    if(nodes.get(edge.endNode).visited == false) {
+                       if(edge.endNode == endNode){
+                           System.out.println();
+                           System.out.println(endNode);
+                           return true;
+                       }
+                       queue.add(nodes.get(edge.endNode));
+                   }
+                }
+
+            }else{
+                // node was null
+                System.out.println();
+                if(queue.size() == 0 ){
+                    break;
+                }
+                queue.add(null);
+            }
+        }
+
+        return false;
+
+
+    }
+
+
+    public void printAllPaths(String source, String dest){
+        source = source.toUpperCase();
+        dest = dest.toUpperCase();
+
+        if( !nodes.containsKey(source) || !nodes.containsKey(dest) ){
+            return;
+        }
+
+        LinkedList<String> visited = new LinkedList<>();
+        printAllPaths(visited, source, dest);
+
+    }
+
+    private void printAllPaths(LinkedList<String> visited, String current, String dest){
+        if( visited.contains(current) ){
+            return;
+        }
+        if(dest == current){
+            for (String str : visited) {
+                System.out.print(str + " -> ");
+            }
+            System.out.println(dest);
+        }
+
+        visited.add(current);
+
+        Node node = nodes.get(current);
+        for (Edge edge : node.listEdges) {
+            if( ! visited.contains(edge.endNode) ){
+                printAllPaths(visited, edge.endNode, dest);
+            }
+        }
+
+        visited.remove(current);
+    }
 
 
 

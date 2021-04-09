@@ -4,7 +4,9 @@ public class Main {
 
     public static void main(String[] args) {
         Graph graph = new Graph();
-        graph.breadthFirstSearch("A");
+       // graph.breadthFirstSearch("A");
+        //System.out.println( graph.isReachable("A", "D") );
+        graph.printAllPaths("A", "D");
 
         System.out.println("");
     }

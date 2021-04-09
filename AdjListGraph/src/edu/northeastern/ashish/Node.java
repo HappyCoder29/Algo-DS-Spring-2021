@@ -41,13 +41,6 @@ public class Node {
     }
     public void  setVisited(Boolean visited){ this.visited = visited; }
 
-    public LinkedList<String> getNeighbours(){
-        LinkedList<String> list = new LinkedList<>();
-        for (Edge edge : listEdges) {
-            list.add(edge.endNode);
-        }
-        return list;
-    }
 }
 
 
