@@ -21,11 +21,13 @@ public class Graph {
         // Add edges
         A.addEdge("B", 1);
         B.addEdge("C", 1);
-        B.addEdge("D", 1);
+       // B.addEdge("D", 1);
         C.addEdge("E", 1);
         E.addEdge("F", 1);
-        E.addEdge("D", 1);
+        F.addEdge("D", 1);
+       // D.addEdge("A", 1);
         D.addEdge("B", 1);
+        B.addEdge("A", 1);
 
         // Add Nodes in the HashMap (Graph)
 
@@ -203,7 +205,92 @@ public class Graph {
         visited.remove(current);
     }
 
+    public boolean containsCycle(){
 
+        for (Map.Entry<String, Node> entry : nodes.entrySet()) {
+            System.out.println("Starting with " + entry.getKey());
+            Stack<Node> stack = new Stack<>();
+            if( containsCycle( entry.getValue(), stack )  ){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean containsCycle(Node node, Stack<Node> stack){
+
+        if( stack.contains(node) ){
+            return  true;
+        }
+
+        stack.push(node);
+
+        for (Edge edge : node.listEdges) {
+          //  System.out.println("Node name  = " + node.name);
+         //   System.out.println("End name  = " + edge.endNode);
+
+            if( containsCycle(nodes.get(edge.endNode), stack ) ){
+                return true;
+            }
+
+        }
+        stack.pop();
+        return false;
+    }
+
+    public boolean isHamiltonian(){
+        RefStore<List<String>> result = new RefStore<>(new LinkedList<>());
+        boolean bHamiltonian = isHamiltonian(result);
+
+        if(bHamiltonian){
+            for (String str : result.value) {
+                System.out.print(str + " -> ");
+            }
+            System.out.println();
+        }
+        return bHamiltonian;
+
+    }
+
+    private boolean isHamiltonian(RefStore<List<String>> result ){
+        Map.Entry<String, Node> entry = nodes.entrySet().iterator().next();
+
+        String startNode = entry.getKey();
+        HashSet<String> visited = new HashSet<>();
+        return  isHamiltonian(startNode, startNode, result, visited);
+
+    }
+
+    private boolean isHamiltonian(String startNode, String currentNode, RefStore<List<String>> result
+            , HashSet<String> visited) {
+
+        visited.add(currentNode);
+        result.value.add(currentNode);
+
+        LinkedList<Edge> edges = nodes.get(currentNode).listEdges;
+
+        for(int i = 0 ; i < edges.size(); i ++){
+
+            if(startNode == edges.get(i).endNode && nodes.size() == result.value.size()){
+                result.value.add(startNode);
+                return true;
+            }
+
+            if ( !visited.contains(edges.get(i).endNode) ){
+                boolean isHamil = isHamiltonian(startNode, edges.get(i).endNode, result, visited);
+                if( isHamil){
+                    return true;
+                }
+            }
+
+        }
+
+        result.value.remove(result.value.size() -1);
+        visited.remove(currentNode);
+        return false;
+
+    }
 
 
 }

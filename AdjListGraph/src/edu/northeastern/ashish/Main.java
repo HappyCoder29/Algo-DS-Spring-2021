@@ -6,7 +6,9 @@ public class Main {
         Graph graph = new Graph();
        // graph.breadthFirstSearch("A");
         //System.out.println( graph.isReachable("A", "D") );
-        graph.printAllPaths("A", "D");
+        //graph.printAllPaths("A", "D");
+
+        System.out.println(graph.isHamiltonian());
 
         System.out.println("");
     }
