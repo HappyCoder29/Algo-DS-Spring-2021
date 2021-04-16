@@ -7,10 +7,14 @@ public class Main {
 
     public static void main(String[] args) {
         Graph graph = new Graph();
-        graph.initialize();
+        graph.initializeDijkstra();
 
-        Graph clone = cloneGraph(graph);
-        System.out.println();
+        graph.dijkstraShortestPath("1");
+
+//        graph.initialize();
+//
+//        Graph clone = cloneGraph(graph);
+//        System.out.println();
        // graph.topologicalSort();
 
 

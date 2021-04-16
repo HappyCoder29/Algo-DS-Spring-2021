@@ -12,6 +12,9 @@ public class Node {
     public Node parent;
     public int rank;
 
+    public String cameFrom = "";
+    public int distance = Integer.MAX_VALUE;
+
     public Node (String name){
         this.name =  name.toUpperCase();
         this.visited = false;
