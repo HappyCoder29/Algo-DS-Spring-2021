@@ -9,11 +9,15 @@ public class Node {
     public String name;
     public Boolean visited;
     public LinkedList<Edge> listEdges;
+    public Node parent;
+    public int rank;
 
     public Node (String name){
         this.name =  name.toUpperCase();
         this.visited = false;
         this.listEdges = new LinkedList<Edge>();
+        this.parent = this;
+        this.rank = 0;
     }
 
     public void addEdge(String endNode, int weight){

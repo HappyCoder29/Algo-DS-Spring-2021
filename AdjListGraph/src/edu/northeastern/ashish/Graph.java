@@ -7,10 +7,11 @@ public class Graph {
     public Node startNode;
     public Graph(){
         nodes = new HashMap<>();
-        initialize();
+      //  initialize();
+      //  initializeDAG();
     }
 
-    private void initialize() {
+    public void initialize() {
         Node A = new Node("A");
         Node B = new Node("B");
         Node C = new Node("C");
@@ -21,13 +22,10 @@ public class Graph {
         // Add edges
         A.addEdge("B", 1);
         B.addEdge("C", 1);
-       // B.addEdge("D", 1);
         C.addEdge("E", 1);
         E.addEdge("F", 1);
-        F.addEdge("D", 1);
-       // D.addEdge("A", 1);
+        E.addEdge("D", 1);
         D.addEdge("B", 1);
-        B.addEdge("A", 1);
 
         // Add Nodes in the HashMap (Graph)
 
@@ -37,6 +35,31 @@ public class Graph {
         nodes.put(D.name, D);
         nodes.put(E.name, E);
         nodes.put(F.name, F);
+    }
+
+    private void initializeDAG(){
+        Node node0 = new Node("0");
+        Node node1 = new Node("1");
+        Node node2 = new Node("2");
+        Node node3 = new Node("3");
+        Node node4 = new Node("4");
+        Node node5 = new Node("5");
+
+        // Add edges
+        node2.addEdge("3", 1);
+        node3.addEdge("1", 1);
+        node4.addEdge("0", 1);
+        node4.addEdge("1", 1);
+        node5.addEdge("2", 1);
+        node5.addEdge("0", 1);
+
+        nodes.put(node0.name, node0);
+        nodes.put(node1.name, node1);
+        nodes.put(node2.name, node2);
+        nodes.put(node3.name, node3);
+        nodes.put(node4.name, node4);
+        nodes.put(node5.name, node5);
+
     }
 
     public void addNode(Node node){
@@ -291,6 +314,76 @@ public class Graph {
         return false;
 
     }
+
+    public boolean isCyclicDisJointSet(){
+
+        // Add All the nodes inside the disjoint set
+        DisjointSet set = new DisjointSet();
+        for (Map.Entry<String, Node> entry : nodes.entrySet()) {
+            entry.getValue().parent = entry.getValue();
+            entry.getValue().rank = 0;
+            set.addNode(entry.getValue());
+        }
+
+        for (Map.Entry<String, Node> entry : nodes.entrySet()){
+            Node startNode = entry.getValue();
+
+            for (Edge edge : startNode.listEdges) {
+                Node endNode = nodes.get(edge.endNode);
+                Node parent1 = startNode.parent;
+                Node parent2 = endNode.parent;
+                // There is a back cycle so we return true
+                if(parent1 == parent2){
+                    return true;
+                }
+                set.union(startNode, endNode);
+            }
+        }
+
+        return false;
+
+    }
+
+
+    public void topologicalSort(){
+        Stack<String> stack = new Stack<>();
+
+        HashSet<String> visited = new HashSet<>();
+
+        for (Map.Entry<String, Node> entry : nodes.entrySet()){
+            Node node = entry.getValue();
+
+            if(!visited.contains(node.name)){
+                topologicalSort(node.name, visited, stack);
+            }
+        }
+
+        // print the stack
+        while(stack.size() != 0){
+            System.out.printf(stack.pop() +  " ");
+        }
+        System.out.println();
+
+    }
+
+    private void topologicalSort( String nodeName,  HashSet<String> visited, Stack<String> stack){
+        // Add node in visited hashset
+        visited.add(nodeName);
+
+        // list of edges and if we have not visited the node we will recurse for that node
+        List<Edge> edges = nodes.get(nodeName).listEdges;
+
+        for(int i = 0 ; i < edges.size(); i ++){
+            if( !visited.contains(edges.get(i).endNode)){
+                topologicalSort(edges.get(i).endNode, visited, stack);
+            }
+        }
+        // At this point al the neighbours of nodeName and the nodes below that are added in the stack
+        // Now We can add the current node i.e. nodeName
+        stack.push(nodeName);
+    }
+
+
 
 
 }
