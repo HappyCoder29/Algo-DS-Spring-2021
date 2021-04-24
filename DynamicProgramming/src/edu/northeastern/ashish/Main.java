@@ -19,9 +19,17 @@ public class Main {
 //        int[] arr = {1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9};
 //        System.out.println(minJumps(arr));
 
-        int[] arr = {1, 11, 2, 10, 4, 5, 2, 1};
-        System.out.println(longestBittonic(arr));
+//        int[] arr = {1, 11, 2, 10, 4, 5, 2, 1};
+//        System.out.println(longestBittonic(arr));
+
+        //System.out.println(longestCommonSubsequence("AGATAB", "GXTXAYB"));
+        int[] arr = {2,5,6,9};
+
+        System.out.println(getMinCoins(arr, 11));
      }
+
+
+    //region Done in Class 1
 
     static int fibRecursive(int n){
         if(n < 0 ){
@@ -258,6 +266,151 @@ public class Main {
         }
         return max;
     }
+    //endregion
+
+    static int longestCommonSubstring(String str1, String str2){
+        char[] arr1 = str1.toCharArray();
+        char[] arr2 = str2.toCharArray();
+
+        int max = 0;
+        int max_index = -1;
+
+        int[][] matrix = new int[arr1.length +1][arr2.length +1];
+
+        int row = matrix.length;
+        int col = matrix[0].length;
+
+        for(int i = 1; i < row  ; i ++ ){
+            for(int j = 1; j < col; j ++){
+                if(arr1[i-1] == arr2[j-1]) {
+                    matrix[i][j] = matrix[i-1][j-1] + 1;
+
+                    if(max < matrix[i][j]){
+                        max = matrix[i][j];
+                        max_index = i - 1;
+                    }
+                }
+            }
+        }
+        System.out.println(str1.substring(max_index - max + 1, max_index + 1));
+        return max;
+    }
+
+    static int longestCommonSubsequence(String str1, String str2){
+        char[] arr1 = str1.toCharArray();
+        char[] arr2 = str2.toCharArray();
+        int[][] matrix = new int[arr1.length +1][arr2.length +1];
+
+        int row = matrix.length;
+        int col = matrix[0].length;
+
+        // We start with 1 since 0th one is for null string
+        for(int i = 1; i < row  ; i ++ ){
+            for(int j = 1; j < col; j ++){
+                // We added an extra col and row so we are reducing by 1
+                if(arr1[i-1] == arr2[j-1]){
+                    matrix[i][j] = matrix[i-1][j-1] +1;
+                }else{
+                    matrix[i][j] = Math.max( matrix[i-1][j], matrix[i][j-1] );
+                }
+            }
+        }
+        int count = matrix[row-1][col -1];
+        Stack<Character> stack = new Stack<>();
+
+        int index1 = row -1;
+        int index2 = col -1;
+        while(count != 0 ){
+            if( arr1[index1 -1] == arr2[index2 -1] ) {
+                stack.push(arr1[index1 -1]);
+                count  --;
+                index1 --;
+                index2 --;
+            }else{
+                // top one is bigger so the value came from top or both of them are same so we can go to top
+                if(matrix[index1 - 1 ][index2] >= matrix[index1][index2 -1]){
+                    index1 --;
+                }else {
+                    index2 --;
+                }
+            }
+        }
+
+       while(stack.size() != 0){
+           System.out.print(stack.pop() + " ");
+       }
+        System.out.println();
+
+        return matrix[row-1][col -1];
+
+    }
+
+    static int getMinCoins(int[] coins, int total){
+        int[][] matrix = new int[coins.length + 1][total +1];
+
+        int row = matrix.length;
+        int col = matrix[1].length;
+
+        for(int i = 0 ; i < row; i ++){
+            for(int j = 1 ; j < col; j ++){
+                matrix[i][j] = Integer.MAX_VALUE - 2;
+            }
+        }
+
+        for(int i = 1 ; i < row; i ++){
+            for(int j = 1 ; j < col; j ++){
+
+                // if the coin value is bigger than the col
+                // this coin cannot be used in this case we will get all the values from top
+                if( coins[i-1] > j ){
+                    matrix[i][j] = matrix[i-1][j];
+                }
+                else{
+
+                    int test = matrix[i][j- coins[i-1]];
+                    int test1 = matrix[i-1][j];
+                    matrix[i][j] = Math.min(    matrix[i][j- coins[i-1]] + 1, // Same row subtract coins value
+                                                matrix[i-1][j] ); // Same col top value
+                    // get the min of these two and update Matrix
+                }
+
+            }
+        }
+
+//        int count = matrix[row-1][col -1];
+//        Stack<Integer> stack = new Stack<>();
+//        int index1 = row -1;
+//        int index2 = col -1;
+//        while(count != 0 ){
+//            // If the top one is smaller than the one in same row then the value came from \
+//            // top row
+//
+//            if( matrix[index1 -1 ][index2] ==  matrix[index1][index2 - coins[index1-1]]  + 1  ){
+//                index1 --;
+//                stack.push(coins[index1-1]);
+//                count -- ;
+//            }
+//            else if (matrix[index1 -1 ][index2] <  matrix[index1][index2 - coins[index1-1]]  + 1) {
+//                index1 --;
+//            }else{
+//                stack.push(coins[index2-1]);
+//                index2  =  index2 - coins[index1-1];
+//                count --;
+//            }
+//
+//
+//        }
+//
+//        while(stack.size() != 0){
+//            System.out.print(stack.pop() + " ");
+//        }
+//        System.out.println();
+
+        return matrix[row-1][col -1];
+
+
+    }
+
 
 
 
